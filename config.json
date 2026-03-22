@@ -1,0 +1,23 @@
+{
+  "port": 3000,
+  "app_name": "Rodolog",
+  "app_version": "2.0.0",
+  "app_description": "Платформа для создания и хранения семейных деревьев",
+  "app_author": "iSmartyPRO",
+  "app_author_email": "info@ismartypro.com",
+  "app_author_url": "https://ismartypro.com",
+  "app_license": "ISC",
+  "app_url": "http://localhost:3000",
+  "mongo_url": "mongodb://familytree:lw98c3jsUSJA@localhost:27017/familytree",
+  "jwt_secret": "CHANGE_ME_IN_PRODUCTION_USE_LONG_RANDOM_STRING",
+  "jwt_expires_in": "7d",
+  "telegram_bot_token": "",
+  "telegram_bot_name": "",
+  "smtp": {
+    "host": "smtp.example.com",
+    "port": 587,
+    "user": "",
+    "password": "",
+    "from": "noreply@rodolog.app"
+  }
+}
