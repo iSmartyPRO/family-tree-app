@@ -138,17 +138,12 @@ src/
 
 ---
 
-## Размещение на GitHub
+## Репозиторий
 
-1. Создайте новый репозиторий на [GitHub](https://github.com/new) (без README, если уже есть в проекте).
-2. Замените в `package.json` все вхождения `YOUR_GITHUB_USERNAME` на ваш логин GitHub (поля `repository`, `bugs`, `homepage`).
-3. При желании обновите год и правообладателя в `LICENSE`.
-4. Убедитесь, что в репозиторий не попадают секреты: в проекте уже игнорируются `.env*`, `node_modules/`, `dist/` и папка `.claude/`.
-5. Выполните в корне проекта:
+Проект на GitHub: [github.com/iSmartyPRO/family-tree-app](https://github.com/iSmartyPRO/family-tree-app)
 
 ```bash
-git remote add github https://github.com/<ваш-логин>/tree-rodolog.git
-git push -u github master
+git clone https://github.com/iSmartyPRO/family-tree-app.git
 ```
 
-Если основная ветка называется `main`, замените `master` на `main`. Если `origin` уже указывает на другой хост, можно оставить его и добавить второй remote с именем `github`, либо изменить `origin` на URL репозитория GitHub.
+В `package.json` указаны поля `repository`, `bugs` и `homepage` для этого репозитория. Секреты в репозиторий не коммитьте: игнорируются `.env*`, `node_modules/`, `dist/` и папка `.claude/`.

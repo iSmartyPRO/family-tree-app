@@ -18,12 +18,12 @@
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/YOUR_GITHUB_USERNAME/tree-rodolog.git"
+    "url": "git+https://github.com/iSmartyPRO/family-tree-app.git"
   },
   "bugs": {
-    "url": "https://github.com/YOUR_GITHUB_USERNAME/tree-rodolog/issues"
+    "url": "https://github.com/iSmartyPRO/family-tree-app/issues"
   },
-  "homepage": "https://github.com/YOUR_GITHUB_USERNAME/tree-rodolog#readme",
+  "homepage": "https://github.com/iSmartyPRO/family-tree-app#readme",
   "dependencies": {
     "lucide-react": "^0.577.0",
     "react": "^19.2.4",
