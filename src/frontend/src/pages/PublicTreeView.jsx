@@ -102,9 +102,15 @@ export default function PublicTreeView() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 56px)' }}>
       <div style={{
-        padding: '12px 20px', background: '#fff', borderBottom: '1px solid var(--border)',
+        padding: '12px 20px', background: 'var(--surface)', borderBottom: '1px solid var(--border)',
         display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap'
       }}>
+        <span
+          className="badge badge-muted"
+          style={{ flexShrink: 0, fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}
+        >
+          {t('tree.view_mode_read')}
+        </span>
         <h2 style={{ fontSize: '1.1rem', fontWeight: 700, flex: 1 }}>{tree.name}</h2>
         {user && !cloned && (
           <button className="btn btn-primary btn-sm" onClick={handleClone} disabled={cloning}>
@@ -117,10 +123,14 @@ export default function PublicTreeView() {
         <TreeCanvas
           nodes={nodes}
           relations={relations}
+          selectedIds={[]}
           selectedId={null}
-          onSelectNode={() => {}}
+          onSelectNodes={() => {}}
+          onUpdateNodesPositions={() => {}}
           onUpdateNodePosition={() => {}}
-          onAddNode={() => {}}
+          seedLineSettings={tree.viewSettings}
+          onEditNode={undefined}
+          onEditRelation={undefined}
           readonly={true}
         />
       </div>

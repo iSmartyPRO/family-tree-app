@@ -10,6 +10,26 @@
   --radius: 8px;
   --shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   --nav-height: 56px;
+  --line-parent: #3b82f6;
+  --line-sibling: #16a34a;
+  --line-spouse: #f59e0b;
+  --tree-canvas-bg: #f0f4f8;
+  --tree-dot: #d1d5db;
+  --danger: #ef4444;
+}
+
+[data-theme='dark'] {
+  --bg: #121218;
+  --surface: #1a1b24;
+  --text: #e8e8ee;
+  --text-muted: #9ca3af;
+  --border: #2d2f3d;
+  --shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+  --line-parent: #60a5fa;
+  --line-sibling: #4ade80;
+  --line-spouse: #fbbf24;
+  --tree-canvas-bg: #0f1117;
+  --tree-dot: #374151;
 }
 
 /* Reset */
@@ -35,10 +55,20 @@ body {
   position: sticky;
   top: 0;
   height: var(--nav-height);
-  background: #fff;
+  background: var(--surface);
   border-bottom: 1px solid var(--border);
   z-index: 50;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+}
+
+[data-theme='dark'] .app-nav {
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.25);
+}
+
+.theme-toggle-btn {
+  min-width: 36px;
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
 .app-content {
@@ -103,7 +133,7 @@ body {
 
 /* Card */
 .card {
-  background: #fff;
+  background: var(--surface);
   border: 1px solid var(--border);
   border-radius: calc(var(--radius) * 1.5);
   box-shadow: var(--shadow);
@@ -123,12 +153,18 @@ body {
 }
 
 .modal {
-  background: #fff;
+  background: var(--surface);
+  color: var(--text);
   border-radius: calc(var(--radius) * 2);
   padding: 32px;
   width: 100%;
   max-width: 480px;
   box-shadow: 0 16px 48px rgba(0, 0, 0, 0.18);
+  border: 1px solid var(--border);
+}
+
+[data-theme='dark'] .modal {
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.55);
 }
 
 /* Forms */
@@ -155,7 +191,7 @@ body {
   font-size: 0.95rem;
   font-family: inherit;
   color: var(--text);
-  background: #fff;
+  background: var(--surface);
   transition: border-color 0.15s, box-shadow 0.15s;
   outline: none;
 }
@@ -273,4 +309,119 @@ textarea.form-input {
   .user-name {
     display: none !important;
   }
+}
+
+/* Tree legend & line controls (TreeCanvas host) */
+.tree-legend-panel {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  z-index: 11;
+  max-width: min(420px, calc(100% - 24px));
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.tree-legend-panel summary {
+  cursor: pointer;
+  padding: 8px 12px;
+  font-weight: 600;
+  color: var(--text);
+  list-style: none;
+  user-select: none;
+}
+
+.tree-legend-panel summary::-webkit-details-marker {
+  display: none;
+}
+
+.tree-legend-panel[open] summary {
+  border-bottom: 1px solid var(--border);
+}
+
+.tree-legend-body {
+  padding: 10px 12px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tree-legend-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.tree-legend-sample {
+  flex-shrink: 0;
+  width: 48px;
+  height: 0;
+  border: none;
+  border-top-width: 3px;
+  border-top-style: solid;
+}
+
+.tree-legend-sample.dashed {
+  border-top-style: dashed;
+}
+
+.tree-line-sliders label {
+  display: block;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 4px;
+  color: var(--text-muted);
+}
+
+.tree-line-sliders input[type='range'] {
+  width: 100%;
+}
+
+.alive-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  user-select: none;
+  background: var(--bg);
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.alive-toggle.on {
+  border-color: #22c55e;
+  box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2);
+}
+
+.alive-toggle.off {
+  border-color: #4b5563;
+  box-shadow: none;
+  opacity: 0.95;
+}
+
+.alive-toggle-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #22c55e;
+}
+
+.alive-toggle.off .alive-toggle-indicator {
+  background: #4b5563;
+}
+
+[data-theme='dark'] .alive-toggle {
+  background: var(--surface);
+}
+
+[data-theme='dark'] .alive-toggle.off {
+  border-color: #52525b;
 }

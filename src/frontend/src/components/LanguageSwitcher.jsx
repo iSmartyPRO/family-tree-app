@@ -1,29 +1,37 @@
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ChevronDown } from 'lucide-react'
+import { useAuth } from '../context/AuthContext'
 
 const LANGUAGES = [
-  { code: 'ru', label: 'RU', flag: '🇷🇺' },
-  { code: 'en', label: 'EN', flag: '🇬🇧' },
-  { code: 'kg', label: 'KG', flag: '🇰🇬' },
-  { code: 'tr', label: 'TR', flag: '🇹🇷' }
+  { code: 'ru', label: 'RU', flag: 'RU' },
+  { code: 'en', label: 'EN', flag: 'EN' },
+  { code: 'kg', label: 'KG', flag: 'KG' },
+  { code: 'tr', label: 'TR', flag: 'TR' }
 ]
 
 export default function LanguageSwitcher() {
   const { i18n } = useTranslation()
+  const { user, updatePreferences } = useAuth()
   const [open, setOpen] = useState(false)
 
   const current = LANGUAGES.find(l => l.code === i18n.language) || LANGUAGES[0]
 
   const handleChange = (code) => {
     i18n.changeLanguage(code)
-    localStorage.setItem('lang', code)
+    try {
+      localStorage.setItem('lang', code)
+    } catch (_) {}
+    if (user) {
+      updatePreferences({ lang: code }).catch(() => {})
+    }
     setOpen(false)
   }
 
   return (
     <div style={{ position: 'relative' }}>
       <button
+        type="button"
         onClick={() => setOpen(!open)}
         style={{
           display: 'flex', alignItems: 'center', gap: 4,
@@ -42,12 +50,13 @@ export default function LanguageSwitcher() {
           <div style={{ position: 'fixed', inset: 0, zIndex: 98 }} onClick={() => setOpen(false)} />
           <div style={{
             position: 'absolute', top: '110%', right: 0,
-            background: '#fff', border: '1px solid var(--border)',
+            background: 'var(--surface)', border: '1px solid var(--border)',
             borderRadius: 'var(--radius)', boxShadow: 'var(--shadow)',
             zIndex: 99, minWidth: 120, overflow: 'hidden'
           }}>
             {LANGUAGES.map(lang => (
               <button
+                type="button"
                 key={lang.code}
                 onClick={() => handleChange(lang.code)}
                 style={{

@@ -111,3 +111,7 @@ export const clonePublicTree = (token, password) =>
     method: 'POST',
     body: { password }
   })
+
+/** Сохранить preferences пользователя в MongoDB (тема, язык) */
+export const patchMyPreferences = (preferences) =>
+  apiFetch('/api/auth/me', { method: 'PATCH', body: { preferences } })

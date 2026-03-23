@@ -28,6 +28,8 @@ const treeSchema = new mongoose.Schema(
     members: { type: [memberSchema], default: [] },
     nodes: { type: [mongoose.Schema.Types.Mixed], default: [] },
     relations: { type: [mongoose.Schema.Types.Mixed], default: [] },
+    /** Визуальные настройки холста (глубина линий сиблингов, изгиб родитель–ребёнок) — хранятся в MongoDB */
+    viewSettings: { type: mongoose.Schema.Types.Mixed, default: null },
     publicLink: { type: publicLinkSchema, default: null },
   },
   {

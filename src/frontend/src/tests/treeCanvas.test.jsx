@@ -2,80 +2,24 @@ import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import React from 'react'
 
-// Mock i18next
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
-    t: (key) => key,
+    t: key => key,
     i18n: { language: 'ru', changeLanguage: vi.fn() }
   })
 }))
 
-// Mock lucide-react
+vi.mock('../context/ThemeContext', () => ({
+  useTheme: () => ({ theme: 'light', isDark: false, toggleTheme: vi.fn(), setTheme: vi.fn() })
+}))
+
 vi.mock('lucide-react', () => ({
   ZoomIn: () => <span data-testid="icon-zoom-in" />,
   ZoomOut: () => <span data-testid="icon-zoom-out" />,
   Maximize2: () => <span data-testid="icon-maximize" />
 }))
 
-import TreeCanvas from '../components/TreeCanvas'
-
-// Auto-layout helper extracted for testing
-function autoLayout(nodes, relations) {
-  if (!nodes.length) return nodes
-
-  const childrenOf = {}
-  const parentsOf = {}
-  nodes.forEach(n => {
-    childrenOf[n.id] = []
-    parentsOf[n.id] = []
-  })
-  relations.forEach(r => {
-    if (r.type === 'parent-child') {
-      if (childrenOf[r.from]) childrenOf[r.from].push(r.to)
-      if (parentsOf[r.to]) parentsOf[r.to].push(r.from)
-    }
-  })
-
-  const roots = nodes.filter(n => parentsOf[n.id].length === 0).map(n => n.id)
-  if (roots.length === 0 && nodes.length > 0) roots.push(nodes[0].id)
-
-  const levelNodes = []
-  const queue = roots.map(id => ({ id, level: 0 }))
-  const visited = new Set()
-  while (queue.length) {
-    const { id, level } = queue.shift()
-    if (visited.has(id)) continue
-    visited.add(id)
-    if (!levelNodes[level]) levelNodes[level] = []
-    levelNodes[level].push(id)
-    ;(childrenOf[id] || []).forEach(cid => {
-      if (!visited.has(cid)) queue.push({ id: cid, level: level + 1 })
-    })
-  }
-
-  nodes.forEach(n => {
-    if (!visited.has(n.id)) {
-      const level = levelNodes.length
-      if (!levelNodes[level]) levelNodes[level] = []
-      levelNodes[level].push(n.id)
-    }
-  })
-
-  const nodeMap = {}
-  nodes.forEach(n => { nodeMap[n.id] = { ...n } })
-  levelNodes.forEach((ids, level) => {
-    const totalWidth = ids.length * 150 + (ids.length - 1) * 60
-    ids.forEach((id, i) => {
-      nodeMap[id] = {
-        ...nodeMap[id],
-        x: i * (150 + 60) - totalWidth / 2 + 75 + 400,
-        y: level * (70 + 100) + 60
-      }
-    })
-  })
-
-  return nodes.map(n => nodeMap[n.id] || n)
-}
+import TreeCanvas, { autoLayout, NODE_W, NODE_H } from '../components/TreeCanvas'
 
 describe('TreeCanvas auto-layout', () => {
   it('returns empty array for empty nodes', () => {
@@ -116,9 +60,7 @@ describe('TreeCanvas auto-layout', () => {
   })
 
   it('preserves node ids and other fields', () => {
-    const nodes = [
-      { id: 'x1', firstName: 'Test', lastName: 'User', gender: 'male', bio: 'some bio' }
-    ]
+    const nodes = [{ id: 'x1', firstName: 'Test', lastName: 'User', gender: 'male', bio: 'some bio' }]
     const result = autoLayout(nodes, [])
     expect(result[0].id).toBe('x1')
     expect(result[0].firstName).toBe('Test')
@@ -133,6 +75,13 @@ describe('TreeCanvas auto-layout', () => {
     expect(typeof result[0].x).toBe('number')
     expect(typeof result[0].y).toBe('number')
   })
+
+  it('uses exported node dimensions in layout', () => {
+    expect(typeof NODE_W).toBe('number')
+    expect(typeof NODE_H).toBe('number')
+    expect(NODE_W).toBeGreaterThan(0)
+    expect(NODE_H).toBeGreaterThan(0)
+  })
 })
 
 describe('TreeCanvas rendering', () => {
@@ -142,7 +91,6 @@ describe('TreeCanvas rendering', () => {
     selectedId: null,
     onSelectNode: vi.fn(),
     onUpdateNodePosition: vi.fn(),
-    onAddNode: vi.fn(),
     readonly: false
   }
 
@@ -166,32 +114,23 @@ describe('TreeCanvas rendering', () => {
     const { container } = render(<TreeCanvas {...defaultProps} nodes={nodes} />)
     const svg = container.querySelector('svg')
     expect(svg).toBeTruthy()
-    // SVG should contain rects for nodes
     const rects = svg.querySelectorAll('rect')
     expect(rects.length).toBeGreaterThan(0)
   })
 
   it('calls onSelectNode when a node is clicked', () => {
     const onSelectNode = vi.fn()
-    const nodes = [
-      { id: 'n1', firstName: 'Alice', lastName: 'Smith', x: 100, y: 100, gender: 'female' }
-    ]
-    const { container } = render(
-      <TreeCanvas {...defaultProps} nodes={nodes} onSelectNode={onSelectNode} />
-    )
-    // Click on the node group (first g inside the transform group)
+    const nodes = [{ id: 'n1', firstName: 'Alice', lastName: 'Smith', x: 100, y: 100, gender: 'female' }]
+    const { container } = render(<TreeCanvas {...defaultProps} nodes={nodes} onSelectNode={onSelectNode} />)
     const svgGroups = container.querySelectorAll('svg g g g')
     if (svgGroups.length > 0) {
       fireEvent.click(svgGroups[0])
     }
-    // The node should have been clickable
     expect(container.querySelector('svg')).toBeTruthy()
   })
 
   it('renders in readonly mode without crashing', () => {
-    const nodes = [
-      { id: 'n1', firstName: 'Test', lastName: 'User', x: 50, y: 50, gender: 'unknown' }
-    ]
+    const nodes = [{ id: 'n1', firstName: 'Test', lastName: 'User', x: 50, y: 50, gender: 'unknown' }]
     const { container } = render(<TreeCanvas {...defaultProps} nodes={nodes} readonly={true} />)
     expect(container.querySelector('svg')).toBeTruthy()
   })
@@ -202,11 +141,8 @@ describe('TreeCanvas rendering', () => {
       { id: 'c', firstName: 'Child', lastName: '', x: 200, y: 250, gender: 'female' }
     ]
     const relations = [{ id: 'r1', from: 'p', to: 'c', type: 'parent-child' }]
-    const { container } = render(
-      <TreeCanvas {...defaultProps} nodes={nodes} relations={relations} />
-    )
+    const { container } = render(<TreeCanvas {...defaultProps} nodes={nodes} relations={relations} />)
     const paths = container.querySelectorAll('path')
-    // Should have at least one path for the relation
     expect(paths.length).toBeGreaterThan(0)
   })
 })

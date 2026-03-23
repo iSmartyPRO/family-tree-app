@@ -46,6 +46,11 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  /** UI: тема, язык и др. — хранится в MongoDB */
+  preferences: {
+    type: mongoose.Schema.Types.Mixed,
+    default: () => ({}),
+  },
 });
 
 // Virtual id field

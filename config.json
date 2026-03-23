@@ -1,23 +1,23 @@
 {
   "port": 3000,
-  "app_name": "Rodolog",
+  "app_name": "ftree",
   "app_version": "2.0.0",
   "app_description": "Платформа для создания и хранения семейных деревьев",
   "app_author": "iSmartyPRO",
-  "app_author_email": "info@ismartypro.com",
-  "app_author_url": "https://ismartypro.com",
+  "app_author_email": "Ilias.Aidar@ismartypro.com",
+  "app_author_url": "https://www.ismarty.pro",
   "app_license": "ISC",
   "app_url": "http://localhost:3000",
-  "mongo_url": "mongodb://familytree:lw98c3jsUSJA@localhost:27017/familytree",
-  "jwt_secret": "CHANGE_ME_IN_PRODUCTION_USE_LONG_RANDOM_STRING",
+  "mongo_url": "mongodb://ftree:Sup3rTr33Pr0ject@192.168.111.252:27017/ftree",
+  "jwt_secret": "vEkme48gm9ozjeRxQftShzdzS2oDKwzj4agh9YqM",
   "jwt_expires_in": "7d",
-  "telegram_bot_token": "",
-  "telegram_bot_name": "",
+  "telegram_bot_token": "8753991319:AAFXWYSeFWuAJF4vkre-Jl-YqXnTHgBwqyg",
+  "telegram_bot_name": "iftree_bot",
   "smtp": {
-    "host": "smtp.example.com",
+    "host": "smtp.mail.ru",
     "port": 587,
-    "user": "",
-    "password": "",
-    "from": "noreply@rodolog.app"
+    "user": "Automailer@ismarty.pro",
+    "password": "1WDG6WTbDEevNdJpnjRG",
+    "from": "iFamily Tree <automailer@ismarty.pro>"
   }
 }

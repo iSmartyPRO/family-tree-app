@@ -14,6 +14,7 @@ function sanitizeTree(tree) {
     name: tree.name,
     nodes: tree.nodes,
     relations: tree.relations,
+    viewSettings: tree.viewSettings || null,
     createdAt: tree.createdAt,
     updatedAt: tree.updatedAt,
   };
@@ -95,6 +96,7 @@ router.post('/:token/clone', requireAuth, async (req, res, next) => {
       owner: req.user.id,
       nodes: sourceTree.nodes,
       relations: sourceTree.relations,
+      viewSettings: sourceTree.viewSettings || null,
       members: [],
       publicLink: null,
     });

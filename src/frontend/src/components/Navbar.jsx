@@ -3,11 +3,13 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '../context/AuthContext'
 import LanguageSwitcher from './LanguageSwitcher'
-import { Menu, X, TreeDeciduous } from 'lucide-react'
+import { useTheme } from '../context/ThemeContext'
+import { Menu, X, TreeDeciduous, Sun, Moon } from 'lucide-react'
 
 export default function Navbar() {
   const { t } = useTranslation()
   const { user, logout } = useAuth()
+  const { theme, toggleTheme } = useTheme()
   const navigate = useNavigate()
   const [menuOpen, setMenuOpen] = useState(false)
 
@@ -41,6 +43,15 @@ export default function Navbar() {
 
         {/* Right side */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginLeft: 'auto' }}>
+          <button
+            type="button"
+            className="btn btn-secondary btn-sm theme-toggle-btn"
+            onClick={toggleTheme}
+            title={theme === 'dark' ? t('nav.theme_light') : t('nav.theme_dark')}
+            aria-label={theme === 'dark' ? t('nav.theme_light') : t('nav.theme_dark')}
+          >
+            {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+          </button>
           <LanguageSwitcher />
           {user ? (
             <>
@@ -68,9 +79,9 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       {menuOpen && (
-        <div style={{
+        <div className="nav-mobile-menu" style={{
           position: 'absolute', top: 56, left: 0, right: 0,
-          background: '#fff', borderBottom: '1px solid var(--border)',
+          background: 'var(--surface)', borderBottom: '1px solid var(--border)',
           padding: '16px 20px', display: 'flex', flexDirection: 'column', gap: 12, zIndex: 100
         }}>
           {!user && <Link to="/" onClick={() => setMenuOpen(false)} className="nav-link">{t('nav.home')}</Link>}

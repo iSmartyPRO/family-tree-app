@@ -132,6 +132,32 @@ router.get('/me', requireAuth, async (req, res, next) => {
   }
 });
 
+// PATCH /api/auth/me — обновление preferences (тема, язык и т.д.) в MongoDB
+router.patch('/me', requireAuth, async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) {
+      return res.status(404).json({ error: 'NOT_FOUND', message: 'User not found' });
+    }
+
+    const { preferences } = req.body;
+    if (preferences && typeof preferences === 'object') {
+      user.preferences = { ...(user.preferences || {}), ...preferences };
+      if (user.preferences.theme != null && user.preferences.theme !== 'dark' && user.preferences.theme !== 'light') {
+        delete user.preferences.theme;
+      }
+      if (user.preferences.lang != null && typeof user.preferences.lang === 'string') {
+        user.preferences.lang = user.preferences.lang.slice(0, 8);
+      }
+    }
+
+    await user.save();
+    res.json(user.toJSON());
+  } catch (err) {
+    next(err);
+  }
+});
+
 // GET /api/auth/verify-email/:token
 router.get('/verify-email/:token', async (req, res, next) => {
   try {

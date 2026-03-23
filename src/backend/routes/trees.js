@@ -108,10 +108,11 @@ router.put('/:id', async (req, res, next) => {
       return res.status(403).json({ error: 'FORBIDDEN', message: 'Write access denied' });
     }
 
-    const { name, nodes, relations } = req.body;
+    const { name, nodes, relations, viewSettings } = req.body;
     if (name !== undefined) tree.name = name.trim();
     if (nodes !== undefined) tree.nodes = nodes;
     if (relations !== undefined) tree.relations = relations;
+    if (viewSettings !== undefined) tree.viewSettings = viewSettings;
 
     await tree.save();
     res.json(tree.toJSON());

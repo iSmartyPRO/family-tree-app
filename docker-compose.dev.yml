@@ -1,0 +1,29 @@
+# Локальная разработка: только Docker (Node внутри контейнеров).
+# После `make install` — `make dev`.
+
+services:
+  backend-dev:
+    image: node:20-alpine
+    container_name: rodolog-backend-dev
+    working_dir: /app/src/backend
+    volumes:
+      - .:/app
+    command: npm run dev
+    ports:
+      - "${PORT:-3000}:3000"
+    environment:
+      NODE_ENV: development
+
+  frontend-dev:
+    image: node:20-alpine
+    container_name: rodolog-frontend-dev
+    working_dir: /app/src/frontend
+    volumes:
+      - .:/app
+    command: npm run dev -- --host 0.0.0.0
+    ports:
+      - "5173:5173"
+    environment:
+      VITE_DEV_API_PROXY: http://backend-dev:3000
+    depends_on:
+      - backend-dev
